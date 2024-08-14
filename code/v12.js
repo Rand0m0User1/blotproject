@@ -10,6 +10,8 @@ const { randInRange, randIntInRange, catmullRom } = blotToolkit;
 const width = 125;
 const height = 125;
 
+setDocDimensions(width, height);
+
 //params
 const gridSpacing = randIntInRange(5, 10);
 const spiralRotations = randIntInRange(50, 200);
@@ -25,8 +27,6 @@ const maxSpiralScaling = 1.0;
 const spiralSizing = randInRange(minSpiralScaling, maxSpiralScaling);
 //1.75 is a constant
 const heightFactor = 1.75 - (spiralSizing - maxSpiralScaling);
-
-setDocDimensions(width, height);
 
 const finalLines = [];
 
@@ -114,8 +114,8 @@ for (let i = 0; i < 40; i++) {
 //mountain range in the horizon
 function drawMountains() {
   const mountains = [];
-  let previousX;
-  let previousY;
+  let previousX = 0;
+  let previousY = height / 4.25;
 
   for (let i = 0; i < 3; i++) {
     let xVal;
@@ -127,13 +127,16 @@ function drawMountains() {
       spacing = mountainSpacing;
     } else {
       xVal = width;
-      spacing = -mountainSpacing;
+      spacing = -(mountainSpacing);
     }
 
     let x = xVal;
     while ((spacing > 0 && x <= width) || (spacing < 0 && x >= 0)) {
       const y = height / 4.25 - randIntInRange(5, mountainHeight);
-      mountains.push([previousX, previousY], [x, y]);
+      mountains.push([
+        [previousX, previousY],
+        [x, y]
+      ]);
       previousX = x;
       previousY = y;
       x += spacing;
@@ -143,7 +146,7 @@ function drawMountains() {
   return mountains;
 }
 
-finalLines.push(drawMountains());
+finalLines.push(...drawMountains());
 
 //not algorithmic so the birds use turtle
 for (let i = 0; i < numBirds; i++) {
